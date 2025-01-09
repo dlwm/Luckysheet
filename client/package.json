@@ -1,0 +1,25 @@
+{
+  "name": "awe-front",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ag-grid-vue3": "^32.2.2",
+    "dingtalk-jsapi": "^3.0.38",
+    "quill": "^2.0.2",
+    "vue": "^3.5.10",
+    "y-websocket": "^2.0.4",
+    "yjs": "^13.6.20"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.8",
+    "vue-tsc": "^2.1.6"
+  }
+}
