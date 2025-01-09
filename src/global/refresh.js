@@ -19,6 +19,8 @@ import { selectHightlightShow, selectionCopyShow, collaborativeEditBox } from '.
 import { createFilterOptions } from '../controllers/filter';
 import { getSheetIndex } from '../methods/get';
 import Store from '../store';
+import { lockedAreaShow } from "../controllers/protection";
+import { debugLog } from "../utils/util";
 
 let refreshCanvasTimeOut = null;
 
@@ -1031,7 +1033,7 @@ function jfrefreshgrid_rhcw(rowheight, colwidth, isRefreshCanvas=true){
 
         Store.luckysheetfile[getSheetIndex(Store.currentSheetIndex)].data = Store.flowdata;
     }
-    
+
     //批注框同步
     luckysheetPostil.positionSync();
     //选区同步
@@ -1042,6 +1044,9 @@ function jfrefreshgrid_rhcw(rowheight, colwidth, isRefreshCanvas=true){
     if($(".luckysheet-selection-copy").is(":visible")){
         selectionCopyShow();
     }
+    debugLog("exec lockedAreaShow");
+    lockedAreaShow();
+    debugLog("finish lockedAreaShow");
 
     //改变单元格行高，选区下拉icon隐藏
     if($("#luckysheet-dropCell-icon").is(":visible")){

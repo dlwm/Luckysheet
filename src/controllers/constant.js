@@ -144,6 +144,7 @@ const gridHTML = function() {
                                                     <div class="luckysheet-column-count-show luckysheet-count-show" id="luckysheet-column-count-show"></div>
                                                     <div class="luckysheet-change-size-line" id="luckysheet-change-size-line"></div>  
                                                     <div class="luckysheet-cell-selected-focus" id="luckysheet-cell-selected-focus"></div>  
+                                                    <div id="luckysheet-protection-area"></div>
                                                     <div id="luckysheet-selection-copy"></div>  
                                                     <div id="luckysheet-chart-rangeShow"></div>
                                                     <div class="luckysheet-cell-selected-extend" id="luckysheet-cell-selected-extend"></div>  

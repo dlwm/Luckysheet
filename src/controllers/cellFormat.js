@@ -15,35 +15,35 @@ function initialCellFormatModelEvent(){
     const _locale = locale();
     const local_cellFormat = _locale.cellFormat;
 
-    $("#luckysheet-cellFormat-confirm").click(function(){
-        let locked = $("#luckysheet-protection-check-locked").is(':checked');
-        let hidden = $("#luckysheet-protection-check-hidden").is(':checked');
-    
-        locked = locked==true?1:0;
-        hidden = hidden==true?1:0;
+    $("#luckysheet-cellFormat-confirm").click(function () {
+      let locked = $("#luckysheet-protection-check-locked").is(":checked");
+      let hidden = $("#luckysheet-protection-check-hidden").is(":checked");
 
-        let d = recycleSeletion(
-            function(cell, r, c, data){
-                if(cell==null){
-                    setcellvalue(r, c, data, {
-                        lo:locked,
-                        hi:hidden
-                    });
-                }
-                else{
-                    cell.lo = locked;
-                    cell.hi = hidden;
-                }
-            },
-            function(){
-                alert(local_cellFormat.sheetDataIsNullAlert);
-            }
-        );
+      locked = locked == true ? 1 : 0;
+      hidden = hidden == true ? 1 : 0;
 
-        jfrefreshgrid(d, undefined, undefined, false);
+      let d = recycleSeletion(
+        function (cell, r, c, data) {
+          debugLog(`更新单元格<${r}-${c}>锁：`,locked);
+          if (cell == null) {
+            setcellvalue(r, c, data, {
+              lo: locked,
+              hi: hidden,
+            });
+          } else {
+            cell.lo = locked;
+            cell.hi = hidden;
+          }
+        },
+        function () {
+          alert(local_cellFormat.sheetDataIsNullAlert);
+        }
+      );
 
-        $("#luckysheet-cellFormat-config").hide();
-        $("#luckysheet-modal-dialog-mask").hide();
+      jfrefreshgrid(d, undefined, undefined, false);
+
+      $("#luckysheet-cellFormat-config").hide();
+      $("#luckysheet-modal-dialog-mask").hide();
     });
 }
 

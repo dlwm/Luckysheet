@@ -6,10 +6,11 @@ import { setluckysheet_scroll_status } from '../methods/set';
 import sheetmanage from './sheetmanage';
 import luckysheetsizeauto from './resize';
 import dataVerificationCtrl from './dataVerificationCtrl';
-import { replaceHtml,transformRangeToAbsolute,openSelfModel } from '../utils/util';
+import { replaceHtml, transformRangeToAbsolute, transformRangeToArray, openSelfModel, debugLog } from "../utils/util";
 import { selectionCopyShow } from './select';
 import tooltip from '../global/tooltip';
 import cleargridelement from '../global/cleargridelement';
+import server from "./server";
 
 let isInitialProtection = false, isInitialProtectionAddRang = false, rangeItemListCache=[], isAddRangeItemState=true, updateRangeItemIndex = null, validationAuthority=null, updatingSheetFile=null, firstInputSheetProtectionPassword = true;
 let sqrefMapCache = {}, inputRangeProtectionPassword = {}, initialRangePasswordHtml=false;
@@ -126,6 +127,10 @@ export function initialEvent(file){
         }
 
         file.config.authority = authorityData;
+        let cfg = $.extend(true, {}, file.config);
+
+        server.saveParam("cg", file.index, cfg["authority"], { "k": "authority" });
+        lockedAreaShow()
 
         inputRangeProtectionPassword = {};
 
@@ -748,8 +753,8 @@ export function closeProtectionModal(){
 function checkProtectionLockedSqref(r, c, aut, local_protection, isOpenAlert=true, isLock=true){
     let isPass = false;
     let rangeAut = aut.allowRangeList;
+    let isExists = false;
     if(rangeAut!=null && rangeAut.length>0){
-        let isExists = false;
         for(let i=0;i<rangeAut.length;i++){
             let ra = rangeAut[i];
             let sqref = ra.sqref;
@@ -784,6 +789,9 @@ function checkProtectionLockedSqref(r, c, aut, local_protection, isOpenAlert=tru
                 break;
             }
         }
+    }
+    if (!isExists) {
+        return true
     }
     if (!isPass && !isLock) isPass = true
     if(!isPass && isOpenAlert){
@@ -894,6 +902,7 @@ export function checkProtectionNotEnable(sheetIndex){
 
     let aut = sheetFile.config.authority;
 
+    debugLog("锁表判断1：",aut==null || aut.sheet==null || aut.sheet==0);
     if(aut==null || aut.sheet==null || aut.sheet==0 ){
         return true;
     }
@@ -927,10 +936,12 @@ export function checkProtectionLocked(r, c, sheetIndex, isOpenAlert=true, isLock
 
     let data=sheetFile.data, cell=data[r][c], aut = sheetFile.config.authority;
 
+    debugLog("锁表判断2：",aut==null || aut.sheet==null || aut.sheet==0);
     if(aut==null || aut.sheet==null || aut.sheet==0 ){
         return true;
     }
 
+    debugLog("锁格子判断：",cell,cell&&cell.lo?cell.lo:null);
     if(cell && cell.lo === 0){ // lo为0的时候才是可编辑
         return true;
     }
@@ -954,6 +965,7 @@ export function checkProtectionCellHidden(r, c, sheetIndex){
 
     let data=sheetFile.data, cell=data[r][c], aut = sheetFile.config.authority;
 
+    debugLog("锁表判断3：",aut==null || aut.sheet==null || aut.sheet==0);
     if(aut==null || aut.sheet==null || aut.sheet==0 ){
         return true;
     }
@@ -979,6 +991,7 @@ export function checkProtectionLockedRangeList(rangeList, sheetIndex){
 
     let aut = sheetFile.config.authority;
 
+    debugLog("锁表判断4：",aut==null || aut.sheet==null || aut.sheet==0);
     if(aut==null || aut.sheet==null || aut.sheet==0 ){
         return true;
     }
@@ -1024,6 +1037,7 @@ export function checkProtectionSelectLockedOrUnLockedCells(r, c, sheetIndex){
 
     let data=sheetFile.data, cell=data[r][c], aut = sheetFile.config.authority;
 
+    debugLog("锁表判断5：",aut==null || aut.sheet==null || aut.sheet==0);
     if(aut==null || aut.sheet==null || aut.sheet==0 ){
         return true;
     }
@@ -1076,6 +1090,7 @@ export function checkProtectionAllSelected(sheetIndex){
 
     let aut = sheetFile.config.authority;
 
+    debugLog("锁表判断6：",aut==null || aut.sheet==null || aut.sheet==0);
     if(aut==null || aut.sheet==null || aut.sheet==0 ){
         return true;
     }
@@ -1111,6 +1126,7 @@ export function checkProtectionFormatCells(sheetIndex){
 
     let aut = sheetFile.config.authority;
 
+    debugLog("锁表判断7：",aut==null || aut.sheet==null || aut.sheet==0);
     if(aut==null || aut.sheet==null || aut.sheet==0 ){
         return true;
     }
@@ -1160,6 +1176,7 @@ export function checkProtectionAuthorityNormal(sheetIndex, type="formatColumns",
 
     let aut = sheetFile.config.authority;
 
+    debugLog("锁表判断8：",aut==null || aut.sheet==null || aut.sheet==0);
     if(aut==null || aut.sheet==null || aut.sheet==0 ){
         return true;
     }
@@ -1183,4 +1200,41 @@ export function checkProtectionAuthorityNormal(sheetIndex, type="formatColumns",
     }
 
     return false;
+}
+
+export function lockedAreaShow() {
+    $("#luckysheet-protection-area").empty();
+
+    let file = Store.luckysheetfile.find(item=>item.index === Store.currentSheetIndex), aut = {};
+    if(file && file.config != null && file.config.authority!=null){
+        debugLog(file.config.authority);
+        aut = file.config.authority;
+    }
+    let rangeList = aut.sheet&&aut.sheet===1?aut.allowRangeList:[]
+
+    if (rangeList.length > 0) {
+        for (let i = 0; i < rangeList.length; i++) {
+            let sqref = rangeList[i].sqref
+            let range = transformRangeToArray(sqref)
+            debugLog(sqref,"->",range);
+            for (let s = 0; s < range.length; s++) {
+                let r1 = range[s].row[0], r2 = range[s].row[1];
+                let c1 = range[s].column[0], c2 = range[s].column[1];
+
+                let row = Store.visibledatarow[r2],
+                  row_pre = r1 - 1 == -1 ? 0 : Store.visibledatarow[r1 - 1];
+                let col = Store.visibledatacolumn[c2],
+                  col_pre = c1 - 1 == -1 ? 0 : Store.visibledatacolumn[c1 - 1];
+
+                let copyDomHtml = '<div class="luckysheet-protection-area" ' +
+                  'style="display: block; ' +
+                  'left: ' + col_pre + 'px; ' +
+                  'width: ' + (col - col_pre - 1) + 'px; ' +
+                  'top: ' + row_pre + 'px; ' +
+                  'height: ' + (row - row_pre - 1) + 'px;"></div>';
+                $("#luckysheet-protection-area").append(copyDomHtml);
+            }
+        }
+    }
+
 }

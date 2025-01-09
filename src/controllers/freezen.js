@@ -10,6 +10,7 @@ import { rowLocationByIndex, colLocationByIndex } from '../global/location';
 import Store from '../store';
 import locale from '../locale/locale';
 import { luckysheetrefreshgrid } from '../global/refresh';
+import imageCtrl from "./imageCtrl";
 
 
 const luckysheetFreezen = {
@@ -551,7 +552,7 @@ const luckysheetFreezen = {
         }
 
         //有冻结时 图片 滚动适应
-        if($(".luckysheet-modal-dialog-image").length > 0 && imageCtrl.images != undefined){
+        if($(".luckysheet-modal-dialog-image").length > 0 && imageCtrl && imageCtrl.images !== undefined){
             _this.scrollAdaptOfImage();
         }
 

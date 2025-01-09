@@ -42,6 +42,7 @@ import dayjs from "dayjs";
 import {getRangetxt } from '../methods/get';
 import {luckysheetupdateCell} from '../controllers/updateCell';
 import luckysheetSearchReplace from "../controllers/searchReplace";
+import { showloading } from "./loading";
 
 const IDCardReg = /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i;
 
@@ -59,7 +60,7 @@ export function getCellValue(row, column, options = {}) {
     }
     let curSheetOrder = getSheetIndex(Store.currentSheetIndex);
     let {
-        type = 'v',
+        type = '',
         order = curSheetOrder
     } = { ...options };
     let targetSheetData = Store.luckysheetfile[order].data;
@@ -6949,3 +6950,16 @@ export function openSearchDialog(source = 1){
     luckysheetSearchReplace.init();
     $("#luckysheet-search-replace #searchInput input").focus();
 }
+
+// 手动关闭ws连接
+export function wsclose() {
+	console.log('调用自定义方法 server.closeWebSocket()')
+	server.closeWebSocket();
+}
+
+// 手动打开ws连接
+export function wsOpen(){
+    showloading('重连中')
+    server.openWebSocket();
+}
+

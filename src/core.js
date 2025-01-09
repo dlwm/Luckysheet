@@ -80,6 +80,8 @@ luckysheet.create = function (setting) {
     server.title = extendsetting.title;
     server.loadSheetUrl = extendsetting.loadSheetUrl;
     server.allowUpdate = extendsetting.allowUpdate;
+    server.afterConnection = extendsetting.afterConnection;
+    server.wsError = extendsetting.wsError;
 
     luckysheetConfigsetting.autoFormatw = extendsetting.autoFormatw;
     luckysheetConfigsetting.accuracy = extendsetting.accuracy;

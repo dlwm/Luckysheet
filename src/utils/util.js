@@ -775,6 +775,53 @@ function transformRangeToAbsolute(txt1) {
     return ret.substr(0, ret.length - 1);
 }
 
+function transformRangeToArray(input) {
+    if (!input || input.length === 0) {
+        return [];
+    }
+
+    // 将列名转换为数字（如 A -> 0, B -> 1, Z -> 25, AA -> 26）
+    function columnToNumber(col) {
+        let num = 0;
+        for (let i = 0; i < col.length; i++) {
+            num = num * 26 + (col.charCodeAt(i) - "A".charCodeAt(0));
+        }
+        return num;
+    }
+
+    let ranges = input.split(",");
+    let result = [];
+
+    for (let range of ranges) {
+        let sheetSplit = range.split("!");
+        let rangePart = sheetSplit.length > 1 ? sheetSplit[1] : sheetSplit[0];
+
+        let rangeBounds = rangePart.split(":");
+        let startCell = rangeBounds[0];
+        let endCell = rangeBounds.length > 1 ? rangeBounds[1] : rangeBounds[0];
+
+        // 提取开始单元格的行和列
+        let startCol = startCell.replace(/[^A-Za-z]/g, ""); // 提取列名
+        let startRow = parseInt(startCell.replace(/[^0-9]/g, ""), 10)-1; // 提取行号
+
+        // 提取结束单元格的行和列
+        let endCol = endCell.replace(/[^A-Za-z]/g, ""); // 提取列名
+        let endRow = parseInt(endCell.replace(/[^0-9]/g, ""), 10)-1; // 提取行号
+
+        // 转换列名为数字
+        let startColNum = columnToNumber(startCol);
+        let endColNum = columnToNumber(endCol);
+
+        // 构造结果对象
+        result.push({
+            row: [startRow, endRow],
+            column: [startColNum, endColNum]
+        });
+    }
+
+    return result;
+}
+
 function openSelfModel(id, isshowMask = true) {
     let $t = $("#" + id)
             .find(".luckysheet-modal-dialog-content")
@@ -887,6 +934,10 @@ function camel2split(camel) {
     });
 }
 
+function debugLog(message, ...optionalParams){
+    console.log(message, ...optionalParams)
+}
+
 export {
     isJsonString,
     common_extend,
@@ -913,8 +964,10 @@ export {
     loadLinks,
     luckysheetContainerFocus,
     transformRangeToAbsolute,
+    transformRangeToArray,
     openSelfModel,
     createProxy,
     arrayRemoveItem,
     camel2split,
+    debugLog,
 };

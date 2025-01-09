@@ -18,6 +18,7 @@ import Store from '../store';
 import server from './server';
 import method from '../global/method';
 
+// 双击单元格触发编辑事件
 export function luckysheetupdateCell(row_index1, col_index1, d, cover, isnotfocus) {
     if(!checkProtectionLocked(row_index1, col_index1, Store.currentSheetIndex)){
         $("#luckysheet-functionbox-cell").blur();

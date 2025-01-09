@@ -1,6 +1,6 @@
 import Store from '../store';
 import locale from '../locale/locale';
-import { replaceHtml } from '../utils/util';
+import { debugLog, replaceHtml } from "../utils/util";
 import sheetmanage from './sheetmanage';
 import {changeSheetContainerSize} from './resize';
 import { jfrefreshgrid_rhcw } from '../global/refresh';
@@ -68,6 +68,7 @@ export function zoomRefreshView(){
 
     // let wp = $scrollLeft.find("div").width(), hp = $scrollTop.find("div").height();
 
+    debugLog("zoomRefreshView");
     jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
     changeSheetContainerSize();
 
