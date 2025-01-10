@@ -7235,7 +7235,7 @@ export default {
         editObjects: "编辑对象",
         editScenarios: "编辑方案",
 
-        allowRangeTitle: "允许用户编辑区域",
+        allowRangeTitle: "锁定区域",
         allowRangeAdd: "新建...",
 
         allowRangeAddTitle: "标题",

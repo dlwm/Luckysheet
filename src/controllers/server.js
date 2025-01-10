@@ -21,6 +21,7 @@ import json from '../global/json';
 import luckysheetConfigsetting from './luckysheetConfigsetting';
 import {customImageUpdate} from './imageUpdateCtrl';
 import method from '../global/method';
+import { lockedAreaShow } from "./protection";
 
 const server = {
 	gridKey: null,
@@ -509,6 +510,10 @@ const server = {
 
 				if(k == "rowlen" || k == "columnlen" || k == "rowhidden"){
 					jfrefreshgrid_rhcw(Store.flowdata.length, Store.flowdata[0].length);
+				}
+
+				if(k == "authority") {
+					lockedAreaShow()
 				}
 
 				setTimeout(function () {

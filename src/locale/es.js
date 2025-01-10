@@ -6923,7 +6923,7 @@ export default {
         editObjects:"Editar objetos",
         editScenarios:"Editar escenarios",
 
-        allowRangeTitle:"Permitir a los usuarios del rango:",
+        allowRangeTitle:"Área bloqueada:",
         allowRangeAdd:"Nuevo...",
 
         allowRangeAddTitle:"Título",

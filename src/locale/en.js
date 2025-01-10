@@ -7257,7 +7257,7 @@ export default {
         editObjects: "Edit objects",
         editScenarios: "Edit scenarios",
 
-        allowRangeTitle: "Allow users of range to:",
+        allowRangeTitle: "Protect area:",
         allowRangeAdd: "New...",
 
         allowRangeAddTitle: "Title",

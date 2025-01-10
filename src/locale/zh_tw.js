@@ -6948,7 +6948,7 @@ export default {
         editObjects         : "編輯對象",
         editScenarios       : "編輯方案",
 
-        allowRangeTitle: "允許用戶編輯區域",
+        allowRangeTitle: "鎖定區域",
         allowRangeAdd  : "新建...",
 
         allowRangeAddTitle         : "標題",
