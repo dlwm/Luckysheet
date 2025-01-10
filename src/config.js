@@ -69,4 +69,5 @@ export default {
     imageUpdateMethodConfig: {}, //自定义图片同步方式
     afterConnection:null,//表格连接完成后执行的方法
     wsError:null,//ws连接异常方法
+    protectionAlert:null,//锁区不可编辑提示
 }

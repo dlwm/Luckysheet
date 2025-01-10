@@ -935,7 +935,7 @@ function camel2split(camel) {
 }
 
 function debugLog(message, ...optionalParams){
-    console.log(message, ...optionalParams)
+    // console.log(message, ...optionalParams)
 }
 
 export {

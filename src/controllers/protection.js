@@ -773,24 +773,26 @@ function checkProtectionLockedSqref(r, c, aut, local_protection, isOpenAlert=tru
             }
 
             if(isExists){
-
                 let password = ra.password;
-                if(password!=null && password.length>0  && !(sqref in inputRangeProtectionPassword)){
-                    if(isOpenAlert){
-                        openRangePasswordModal(ra);
-                        $("#luckysheet-selection-copy .luckysheet-selection-copy").hide();
-                    }
-                    return false;
-                }
-                else{
+
+                if(sqref in inputRangeProtectionPassword){ // 之前已经解锁
                     isPass = true;
+                    break;
                 }
 
-                break;
+                if(password!=null && password.length>0 && isOpenAlert) { // 选区是否有设置密码，有密码则弹出提示
+                    openRangePasswordModal(ra);
+                    debugLog("openRangePasswordModal")
+                    $("#luckysheet-selection-copy .luckysheet-selection-copy").hide();
+                } else { // 无密码选区直接拒绝编辑并提示
+                    Store.protectionAlert && Store.protectionAlert()
+                }
+                return false;
             }
         }
     }
-    if (!isExists) {
+
+    if (!isExists) { // 不在自定义选区时，允许编辑
         return true
     }
     if (!isPass && !isLock) isPass = true
@@ -880,6 +882,7 @@ function openRangePasswordModal(rangeAut) {
             $rangeV.hide();
             $("#luckysheet-modal-dialog-mask").hide();
             alert(local_protection.checkPasswordSucceedalert);
+            lockedAreaShow()
         }
         else{
             alert(local_protection.checkPasswordWrongalert);
@@ -1215,6 +1218,7 @@ export function lockedAreaShow() {
     if (rangeList.length > 0) {
         for (let i = 0; i < rangeList.length; i++) {
             let sqref = rangeList[i].sqref
+            if(sqref in inputRangeProtectionPassword) continue; // 已解密取消遮罩
             let range = transformRangeToArray(sqref)
             debugLog(sqref,"->",range);
             for (let s = 0; s < range.length; s++) {

@@ -167,6 +167,7 @@ const Store = {
     },
     conditionFormatCells: {}, // 条件格式高亮的单元格
 
+    protectionAlert:null,//锁区不可编辑提示
 }
 
 export default Store;
